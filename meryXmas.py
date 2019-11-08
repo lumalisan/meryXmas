@@ -21,18 +21,22 @@ class meryXmas(object):
         self.santaSem = threading.Semaphore(0)
         self.elfoSem = threading.Semaphore(0)
         self.renoSem = threading.Semaphore(0)
-        
+
     def reno(self):
         #Lo que esta dentro del with es la seccion critica
+        print("{} here!".format(nombreRenos[self.contadorRenos]))
         with self.mutex:
-            print("{} here!".format(nombreRenos[self.contadorRenos]))
             self.contadorRenos += 1
             if self.contadorRenos == 9:
+                print("Reindeer {} I'm the 9!".format(nombreRenos[self.contadorRenos - 1]))
                 self.santaSem.release()
+            else:
+                print("Reindeer {} arrives!".format(nombreRenos[self.contadorRenos - 1]))
         self.renoSem.acquire()
-        prepararReno()
-    
+        prepararReno(nombreRenos[self.contadorRenos - 1])
+
     def santa(self):
+        print("-------> Santa says: I'm going to sleep")
         self.santaSem.acquire()
         print("-------> Santa says: I'm awake ho ho ho!")
         with self.mutex:
@@ -43,7 +47,7 @@ class meryXmas(object):
             else:
                 self.elfoSem.release(3)
                 ayudarElfos()
-                
+
     def elfo(self):
         self.elfoMutex.acquire()
         with self.mutex:
@@ -58,50 +62,59 @@ class meryXmas(object):
             self.contadorElfos -= 1
             if self.contadorElfos == 0:
                 self.elfoMutex.release()
-            
-                
-                
-
-def prepararReno(self):
-    
-
-counter = 0
-def thread(sc):
-    global counter
-    id = threading.currentThread().name
-    print()
 
 
-def Santa():
-    print("-------> Santa says: I'm tired")
-    print("-------> Santa says: I'm going to sleep")
-    
-    print("-------> Santa says: I'm awake ho ho ho!")
+
+
+def prepararReno(name):
+    print("{} ready and hitched".format(name))
+
+def prepararTrineo():
     print("-------> Santa says: Toys are ready!")
     print("Santa loads the toys")
     print("-------> Santa says: Until next Christmas")
-    
+
+
+
+# Creamos las funciones de los threads
+def threadSanta(mxm):
+    print("-------> Santa says: I'm tired")
+    mxm.santa()
+
+def threadRenos(mxm):
+    mxm.reno()
+
+def threadElfos(mxm):
+    mxm.elfo()
+
 def main():
     threads = []
 
-    buffer = meryXmas()
-    for i in range(ELFOS):
-        e = threading.Thread(target=consumer, args=(buffer,))
-        threads.append(e)
+    mxm = meryXmas()
 
+    # Creamos el thread de santa
+    s = threading.Thread(target=threadSanta, args=(mxm,))
+    threads.append(s)
+
+    # Creamos los threads de los renos
     for i in range(RENOS):
-        r = threading.Thread(target=producer, args=(buffer,))
+        r = threading.Thread(target=threadRenos, args=(mxm,))
         threads.append(r)
 
-    # Start all threads
+    # Creamos los threads de los elfos
+    for i in range(ELFOS):
+        e = threading.Thread(target=threadElfos, args=(mxm,))
+        threads.append(e)
+
+    # Iniciamos los threads
     for t in threads:
         t.start()
 
-    # Wait for all threads to complete
+    # Esperamos a que acaben
     for t in threads:
         t.join()
 
-    print("End")
+    print("Ejecución finalizada correctamente")
 
 
 if __name__ == "__main__":
