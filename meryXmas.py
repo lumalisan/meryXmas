@@ -1,10 +1,11 @@
+#######################
+###     AUTORES     ###
+### Castorina, Izar ###
+### Rocha, Lisandro ###
+#######################
+
 import threading
 import time
-
-# Wait = Acquire
-# Signal = Release
-# https://www.youtube.com/watch?v=pqO6tKN2lc4
-# CADA ELFO PUEDE PREGUNTAR COMO MAXIMO 2 VECES
 
 RENOS = 9
 ELFOS = 9
@@ -15,7 +16,7 @@ nombreRenos = ["RUDOLPH", "BLITZEN", "DONDER", "CUPID", "COMET", "VIXEN", "PRANC
 
 contadorElfos = 0
 contadorRenos = 0
-contadorTurnos = 0
+contadorTurnos = 1
 contadorTurnosElfos = 0
 
 class meryXmas(object):
@@ -40,12 +41,12 @@ class meryXmas(object):
         with self.mutex:
             contadorRenos -= 1
             prepararReno(nombreRenos[contadorRenos])
-        print("Elf {} ends".format(nombreRenos[i]))
+        print("Reno {} ends".format(nombreRenos[i]))
 
     def santa(self):
         global contadorRenos
         global contadorTurnos
-        while contadorTurnos != 6:
+        while contadorTurnos <= 6:
             print("-------> Santa says: I'm going to sleep")
             self.santaSem.acquire()
             print("-------> Santa says: I'm awake ho ho ho!")
@@ -59,15 +60,17 @@ class meryXmas(object):
                         contadorRenos -= 1
                 else:
                     #self.elfoSem.release(3)
+                    time.sleep(0.5)
                     ayudarElfos()
                     for i in range(3):
                         self.elfoSem.release()
                         pedirAyuda(i + 1)
-                    print("-------> Santa ends turn {}".format(contadorTurnos + 1)) 
+                    print("-------> Santa ends turn {}".format(contadorTurnos))
                     contadorTurnos += 1
 
     def elfo(self, i):
         global contadorElfos
+        contadorTurnosElfos = 0
         while contadorTurnosElfos != 2:
             self.elfoMutex.acquire()
             with self.mutex:
@@ -82,6 +85,7 @@ class meryXmas(object):
                 contadorElfos -= 1
                 if contadorElfos == 0:
                     self.elfoMutex.release()
+            contadorTurnosElfos += 1
         print("Elf {} ends".format(nombreElfos[i]))
 
 
@@ -107,7 +111,7 @@ def threadSanta(mxm):
 
 def threadRenos(mxm, i):
     print("{} here!".format(nombreRenos[i]))
-    time.sleep(1)
+    time.sleep(0.01)
     mxm.reno(i)
 
 def threadElfos(mxm, i):
