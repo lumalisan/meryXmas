@@ -1,8 +1,34 @@
-#######################
-###     AUTORES     ###
-### Castorina, Izar ###
-### Rocha, Lisandro ###
-#######################
+#####################################################################
+#####################################################################
+#####################################################################
+#  ___   _   _  _____  _____ ______  _____  _____ 
+# / _ \ | | | ||_   _||  _  || ___ \|  ___|/  ___|
+#/ /_\ \| | | |  | |  | | | || |_/ /| |__  \ `--. 
+#|  _  || | | |  | |  | | | ||    / |  __|  `--. \
+#| | | || |_| |  | |  \ \_/ /| |\ \ | |___ /\__/ /
+#\_| |_/ \___/   \_/   \___/ \_| \_|\____/ \____/ 
+#                                                                                                                                                                                                                               
+# _____                   _____              _                _               
+#|_   _|                 /  __ \            | |              (_)              
+#  | |  ____ __ _  _ __  | /  \/  __ _  ___ | |_  ___   _ __  _  _ __    __ _ 
+#  | | |_  // _` || '__| | |     / _` |/ __|| __|/ _ \ | '__|| || '_ \  / _` |
+# _| |_ / /| (_| || |    | \__/\| (_| |\__ \| |_| (_) || |   | || | | || (_| |
+# \___//___|\__,_||_|     \____/ \__,_||___/ \__|\___/ |_|   |_||_| |_| \__,_|
+#
+# _      _                         _              ______              _            
+#| |    (_)                       | |             | ___ \            | |           
+#| |     _  ___   __ _  _ __    __| | _ __  ___   | |_/ / ___    ___ | |__    __ _ 
+#| |    | |/ __| / _` || '_ \  / _` || '__|/ _ \  |    / / _ \  / __|| '_ \  / _` |
+#| |____| |\__ \| (_| || | | || (_| || |  | (_) | | |\ \| (_) || (__ | | | || (_| |
+#\_____/|_||___/ \__,_||_| |_| \__,_||_|   \___/  \_| \_|\___/  \___||_| |_| \__,_|
+#
+#####################################################################
+#####################################################################
+#####################################################################
+###### ENLACE AL VÍDEO: {insertar enlace video aquí}     ############
+#####################################################################
+#####################################################################
+#####################################################################
 
 import threading
 import time
@@ -67,6 +93,7 @@ class meryXmas(object):
                         pedirAyuda(i + 1)
                     print("-------> Santa ends turn {}".format(contadorTurnos))
                     contadorTurnos += 1
+        print("-------> Santa ends")
 
     def elfo(self, i):
         global contadorElfos
@@ -75,7 +102,10 @@ class meryXmas(object):
             self.elfoMutex.acquire()
             with self.mutex:
                 contadorElfos += 1
-                print("Elf {} says: I have a question, I'm the {} waiting...".format(nombreElfos[i], contadorElfos))
+                if contadorElfos < 3:
+                    print("Elf {} says: I have a question, I'm the {} waiting...".format(nombreElfos[i], contadorElfos))
+                else:
+                    print("Elf {} says: I have a question, I'm the {} SANTAAAAAA!!".format(nombreElfos[i], contadorElfos))
                 if contadorElfos == 3:
                     self.santaSem.release()
                 else:
@@ -98,7 +128,7 @@ def prepararTrineo():
     print("-------> Santa says: Until next Christmas")
 
 def ayudarElfos():
-    print("-------> Santa says: What is the problem BITCH!")
+    print("-------> Santa says: What is the problem?¿?¿?!¡¡!¡¡!!!")
 
 def pedirAyuda(contadorAyuda):
     print("-------> Santa helps the elf {} of 3".format(contadorAyuda))
